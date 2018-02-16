@@ -1,0 +1,20 @@
+{
+  "name": "servidores_webrtc",
+  "version": "0.0.1",
+  "description": "Servidores en nodejs para WebSockets y procesos de signaling de WebRTC",
+  "main": "directo.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "websocket",
+    "webrtc",
+    "nodejs",
+    "signaling"
+  ],
+  "author": "Jaime Santana",
+  "license": "ISC",
+  "dependencies": {
+    "nodejs-websocket": "^1.7.1"
+  }
+}
