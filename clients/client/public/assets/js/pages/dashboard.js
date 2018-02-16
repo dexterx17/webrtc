@@ -30,7 +30,7 @@ $( document ).ready(function() {
     $("span.pie").peity("pie")
     
     // Radar Chart
-    var ctx3 = document.getElementById("radar-chart").getContext("2d");
+    /*var ctx3 = document.getElementById("radar-chart").getContext("2d");
     var data3 = {
         labels: ["Eat", "Drink", "Sleep", "Work", "Code", "Cycle", "Run"],
         datasets: [
@@ -77,7 +77,7 @@ $( document ).ready(function() {
         scaleStepWidth: 15,
         scaleStartValue: 0,
     });
-    
+    */
     
     var DrawSparkline = function() {
         

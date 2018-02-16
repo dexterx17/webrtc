@@ -55,23 +55,31 @@ var server = ws.createServer(function(conexion){
 		console.log("un connection ahi:");
 	});
 
-	conexion.on("text", function (str) {
+	conexion.on("text", function (msg) {
 		n_mensajes++;
-	    console.log("on mensaje:");
+	    /*console.log("on mensaje:");
+	    console.log(msg);
+	    console.log(msg.cliente);
+	    console.log(msg['cliente']);
+	    console.log('* * * * * * ');*/
+	    console.log('--------------------------');
+	    var str = JSON.parse(msg);
 	    console.log(str);
-	    console.log(conexion.tipo);
-	    if (conexion.tipo === null || ( typeof conexion.tipo === "undefined") ) {
-			conexion.tipo = str
+	    console.log(str['cliente']);
+	    console.log(str.cliente);
+	    console.log('--------------------------');
+	    if (conexion.cliente === null || ( typeof conexion.cliente === "undefined") ) {
+			conexion.cliente = str.cliente
 			//broadcast(str+" entered");
 			//broadcast(JSON.stringify('{"n_clientes":'+ n_clientes +'}'));
 			broadcast('{"n_clientes":'+ n_clientes +',"n_mensajes":' + n_mensajes + '}');
-			broadcast('{"connected":"'+ conexion.tipo +'","ip":"'+ conexion.socket.remoteAddress +'"}');
-			if(conexion.tipo==="visualizador"){
+			broadcast('{"connected":"'+ conexion.cliente +'","ip":"'+ conexion.socket.remoteAddress +'"}');
+			if(conexion.cliente==="visualizador"){
 				visualizadores.push(conexion);
 			}
 
 		} else
-			broadcast("["+conexion.tipo+"] "+str)
+			broadcast("["+conexion.cliente+"] "+str)
 	});
 
 	conexion.on("close", function (code, reason) {
@@ -79,7 +87,7 @@ var server = ws.createServer(function(conexion){
 		//disminuyo en 1 el contador de clientes
 		n_clientes--;
 		broadcast('{"n_clientes":'+ n_clientes +',"n_mensajes":' + n_mensajes + '}');
-		broadcast('{"disconnected":"'+ conexion.tipo  +'","ip":"'+ conexion.socket.remoteAddress +'"}');
+		broadcast('{"disconnected":"'+ conexion.cliente  +'","ip":"'+ conexion.socket.remoteAddress +'"}');
 	});
 
 	 conexion.on('error', function(e){

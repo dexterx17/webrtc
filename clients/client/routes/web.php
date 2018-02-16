@@ -14,3 +14,11 @@
 Route::get('/', function () {
     return view('home');
 })->name('home');
+
+Route::get('/control-drone', function () {
+    return view('control_drone');
+})->name('control-drone');
+
+Route::get('/control-kunka', function () {
+    return view('control_kunka');
+})->name('control-kunka');

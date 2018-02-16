@@ -2,8 +2,8 @@
 
 @section('content')
 
-<main class="mn-inner inner-active-sidebar">
-    <div class="middle-content">
+<main class="mn-inner ">
+    <div class="">
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l6">
                 <div class="card stats-card">
@@ -75,7 +75,6 @@
         </div>
     </div>
 
-    @include('template.partials.sidebar')
 
 </main>
 
@@ -85,18 +84,7 @@
 
 <script type="text/javascript">
 
-    function section_cliente(data){
-        var icon = 'hearing';
-        if(data.connected === 'controlador')
-            icon = 'settings_remote';
-        if(data.connected === 'plataforma')
-            icon = 'my_location';
-        
-        var section ='<div  class="info-item message-item" id="cliente' + data.ip + '"><i class="small material-icons">'+icon;
-        section += '</i><div class="message-info"><div class="message-author">' + data.connected + '</div>';
-        section += '<small>' + data.ip + '</small></div></div>';
-        return section;
-    }
+
     function WebSocketTest()
     {
         if ("WebSocket" in window)
@@ -109,8 +97,9 @@
             {
                 $('#status_server').html('online').removeClass('red').addClass('green');
                 // Web Socket is connected, send data using send()
-                //ws.send('{ "cliente" : "visualizador" }');
-                ws.send('visualizador');
+                ws.send('{"cliente":"visualizador"}');
+                //ws.send(JSON.stringify('{"cliente":"visualizador"}'));
+                //ws.send('visualizador');
                 Materialize.toast('Visualizador inicializado', 4000);
             };
             
