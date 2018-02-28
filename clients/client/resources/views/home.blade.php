@@ -1,5 +1,17 @@
 @extends('template.base')
 
+
+@section('css')
+    <style type="text/css" media="screen">
+        #map-canvas{
+            width: 100%;
+            min-height: 400px;
+            height: 100%;
+            display: block;
+        }
+    </style>
+@endsection
+
 @section('content')
 
 <main class="mn-inner ">
@@ -37,16 +49,8 @@
         </div>
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l8">
-                <div class="card visitors-card">
-                    <div class="card-content">
-                        <div class="card-options">
-                            <ul>
-                                <li><a href="javascript:void(0)" class="card-refresh"><i class="material-icons">refresh</i></a></li>
-                            </ul>
-                        </div>
-                        <span class="card-title">Datos transmitidos<span class="secondary-title">Mensajes de estado vs Mensajes de control</span></span>
-                        <div id="flotchart1"></div>
-                    </div>
+                <div class="card">
+                    <div  id="map-canvas" class="card-content"></div>
                 </div>
             </div>
             <div class="col s12 m12 l4">
@@ -71,6 +75,17 @@
                         <div id="flotchart2"></div>
                     </div>
                 </div>
+                <div class="card visitors-card">
+                    <div class="card-content">
+                        <div class="card-options">
+                            <ul>
+                                <li><a href="javascript:void(0)" class="card-refresh"><i class="material-icons">refresh</i></a></li>
+                            </ul>
+                        </div>
+                        <span class="card-title">Datos transmitidos<span class="secondary-title">Mensajes de estado vs Mensajes de control</span></span>
+                        <div id="flotchart1"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -82,8 +97,28 @@
 
 @section('js')
 
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCzjeZ1lORVesmjaaFu0EbYeTw84t1_nek"></script>
+
 <script type="text/javascript">
 
+    var map;
+    var marker;
+    var markers = [];
+
+    var drone_image = '{{ asset("img/drone.png") }}';
+    var kunka_image = '{{ asset("img/kunka.png") }}';
+
+
+    $( document ).ready(function() {
+        function initialize() {
+            var mapOptions = {
+                center: new google.maps.LatLng(-0.9357917,-78.6124162,12),
+                zoom: 18
+            };
+            map = new google.maps.Map(document.getElementById('map-canvas'),  mapOptions); 
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+    });
 
     function WebSocketTest()
     {
@@ -91,7 +126,7 @@
         {
             Materialize.toast('WebSocket is supported by your Browser and online!', 4000);
             // Let us open a web socket
-            var ws = new WebSocket("ws://10.211.159.62:9000/");
+            var ws = new WebSocket("ws://10.211.159.163:9000/");
             
             ws.onopen = function()
             {
@@ -107,14 +142,14 @@
             { 
                 var data = evt.data;
 
-                //console.log('- - - - -- - - - - - - -');
-                //console.log(data);
-                //console.log('********************');
+                console.log('- - - - -- - - - - - - -');
+                console.log(data);
+                console.log('********************');
 
                 var json = JSON.parse(data);
 
-                //console.log(json);
-                //console.log('- - - - -- - - - - - - -');
+                console.log(json);
+                console.log('- - - - -- - - - - - - -');
 
                 if( typeof json['n_clientes'] !== "undefined" ){
                     $('#numero_clientes').html(json['n_clientes']);
@@ -122,7 +157,20 @@
                 }else if(typeof json['connected'] !== "undefined") {
                     $('#list-clientes-conectados').append(section_cliente(json));
                 }else if(typeof json['disconnected'] !== "undefined") {
-                    $item = $('#list-clientes-conectados').children('[id^="cliente'+json.ip+'"]').fadeOut('slow');
+                    $item = $('#list-clientes-conectados').children('[id^="cliente'+json.id+'"]').fadeOut('slow');
+                }else if(typeof json['client'] !== "undefined") {
+                    if( typeof marker !== "undefined" ){
+                        marker.setPosition({ lat : json['lat'], lng : json['lng'] });
+                    }else{
+                        marker = new google.maps.Marker({
+                            position: { lat : json['lat'], lng : json['lng'] },
+                            map: map,
+                            title: json['client'],
+                            icon: drone_image
+                          });
+                    }
+
+                    $('#total_mensajes').html(parseInt($('#total_mensajes').html())+1);
                 }else{
                     console.log(json);
                 }

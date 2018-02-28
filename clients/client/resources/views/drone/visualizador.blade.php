@@ -24,7 +24,7 @@
             <div class="col s6 m6 l6">
                 <div class="card">
                     <div class="card-content">
-                        <span class="card-title">Instrucciones de control</span><br>
+                        <span class="card-title">Instrucciones de control para drone</span><br>
                         <div class="row">
                             <form class="col s12">
                                 <div class="row">
@@ -61,7 +61,7 @@
             <div class="col s6 m6 l6">
                 <div class="card">
                     <div class="card-image waves-effect waves-block waves-light">
-                        <img class="activator" src="assets/images/card-image2.jpg" alt="">
+                        <img class="activator" src="assets/images/card-image2.jpg" alt="" >
                     </div>
                     <div class="card-content">
                         <span class="card-title activator">DRONE DATA</span>
