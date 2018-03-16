@@ -3,7 +3,7 @@
  *	Servidor Websocket simple
  *
  *  espera la conexion de 1 controlador y 1 plataforma, y cada vez que un dato
- *  es enviado por cualquiera es reenviado al otro cliente
+ *  es enviado por cualquiera es reenviado al otro alias
  *
  *  npm install nodejs-websocket
 **/
@@ -15,8 +15,17 @@ var ws = require("nodejs-websocket");
 var ipServer = "0.0.0.0";
 var puertoServer = 9000;
 
+//Constantes que identifican el tipo de mensaje recibido a traves del websocket
+MSG_IDENTIFICACION = "id";
+MSG_INSTRUCCION= "inst";
+MSG_ESTADO = "stat";
+MSG_EMPAREJAMIENTO = "emp";
+MSG_CONEXION  = "conn";
+MSG_LISTADO_CLIENTES = "list";
+MSG_ESTADO_SERVIDOR = "stats";
+MSG_DESCONEXION = "disc";
 
-//Instancias para clientes del websocket
+//Instancias para clientis del websocket
 var plataforma;
 var controlador;
 var visualizadores = [];
@@ -28,10 +37,10 @@ var n_mensajes = 0;
 
 //Creamos y configuramos el WebSocket
 var server = ws.createServer(function(conexion){
-	console.log('Nuevo cliente conectado');
+	console.log('Nuevo alias conectado');
 	//console.log(server);
 	//console.log(server.socket);
-	//aumento un 1 el contador de clientes
+	//aumento un 1 el contador de clientis
 	n_clientes++;
 
 	console.log('-------------------------------------');
@@ -74,58 +83,70 @@ var server = ws.createServer(function(conexion){
 	    console.log('* * * * * * ');*/
 	    console.log('--------------------------');
 	    var str = JSON.parse(msg);
+	    console.log('*****');
+	    console.log(str.ev);
+	    console.log('*****');
 	    console.log(str);
 	    //console.log(str['cliente']);
 	    //console.log(str.cliente);
 	    console.log('--------------------------');
-	    if (conexion.cliente === null || ( typeof conexion.cliente === "undefined") ) {
-			conexion.cliente = str.cliente
-			conexion.tipo = str.cliente
-			//broadcast(str+" entered");
-			//broadcast(JSON.stringify('{"n_clientes":'+ n_clientes +'}'));
-			broadcast('{"n_clientes":'+ n_clientes +',"n_mensajes":' + n_mensajes + '}');
+	    switch (str.ev) {
+	    	case MSG_IDENTIFICACION:
+	    		if (conexion.alias === null || ( typeof conexion.alias === "undefined") ) {
+					conexion.cliente = str.cliente;
+					conexion.tipo = str.tipo;
+					//broadcast(str+" entered");
+					//broadcast(JSON.stringify('{"n_clientes":'+ n_clientes +'}'));
+					
+					console.log('tipo: ' + conexion.tipo);
+					//agrego el cliente a su array correspondiente y le generamos un alias unico
+					initClient(conexion);
 
-			if(conexion.cliente === "visualizador"){
-				conexion.cliente = conexion.cliente+((visualizadores.length)+1);
-				visualizadores.push(conexion);
-			}else if( conexion.cliente === "controlador"){
-				conexion.cliente = conexion.cliente+((controladores.length)+1);
-				controladores.push(conexion);
-			}else if( conexion.cliente === "plataforma"){
-				conexion.cliente = conexion.cliente+((plataformas.length)+1);
-				plataformas.push(conexion);
-			}
-			
-			broadcast('{"connected":"'+ conexion.tipo +'","ip":"'+ conexion.socket.remoteAddress + '","id":"'+ conexion.cliente +'"}');
-			
-			console.log(conexion.cliente);
+					//notifico a los visualizadores el estado de los clientes en el servidor
+					broadcastVisualizadores(getStats());
+					//envio a los visualizadores los datos de los clientes conectados
+					broadcastVisualizadores(JSON.stringify(getClientesConectados()));
+					
+					//notifico a todos los clientes que un nuevo cliente se conecto
+					broadcast('{"ev":"id","tipo":"'+ conexion.tipo +'","ip":"'+ conexion.socket.remoteAddress + '","id":"'+ conexion.alias +'"}');
+				}
+	    		break;
+	    	case MSG_INSTRUCCION:
 
-		} else {
-			str.client = conexion.tipo;
-			broadcast(JSON.stringify(str));
-		}
+	    	break;
+	    	case MSG_ESTADO:
+	    		
+				broadcast(JSON.stringify(str));
+	    	break;
+	    	default:
+	    	break;
+	    }	    
+		
 	});
 
 	conexion.on("close", function (code, reason) {
-		var index_cliente = (conexion.cliente.substring(conexion.cliente.length-1, conexion.cliente.length))-1;
+		var index_alias = (conexion.alias.substring(conexion.alias.length-1, conexion.alias.length))-1;
 		console.log('=============================');
 		console.log('desconectado');
 		console.log('tipo: ' + conexion.tipo);
 		console.log('ip: ' + conexion.socket.remoteAddress);
-		console.log('cliente: ' + conexion.cliente);
-		console.log('index: ' + index_cliente);
+		console.log('alias: ' + conexion.alias);
+		console.log('index: ' + index_alias);
+		console.log('data: ' + conexion.data);
 		console.log('============================================');
 		if(conexion.tipo === "visualizador"){
-			visualizadores.splice(index_cliente, 1);
+			visualizadores.splice(index_alias, 1);
 		}else if( conexion.tipo === "controlador"){
-			controladores.splice(index_cliente, 1);
+			controladores.splice(index_alias, 1);
 		}else if( conexion.tipo === "plataforma"){
-			plataformas.splice(index_cliente, 1);
+			plataformas.splice(index_alias, 1);
 		}
-		//disminuyo en 1 el contador de clientes
+		//disminuyo en 1 el contador de clientis
 		n_clientes--;
-		broadcast('{"n_clientes":'+ n_clientes +',"n_mensajes":' + n_mensajes + '}');
-		broadcast('{"disconnected":"'+ conexion.tipo  +'","ip":"'+ conexion.socket.remoteAddress + '","id":"' + conexion.cliente + '"}');
+		//notifico a los visualizadores el estado de los clientes en el servidor
+		broadcastVisualizadores(getStats());
+		//notifico a todos los clientes que el cliente se desconecto
+		broadcast('{"ev":"disc","disconnected":"'+ conexion.tipo  +'","ip":"'+ conexion.socket.remoteAddress + '","id":"' + conexion.alias + '"}');
 	});
 
 	 conexion.on('error', function(e){
@@ -134,13 +155,80 @@ var server = ws.createServer(function(conexion){
     });
 	
 
-//Arrancamos el servidor WebSocket en la ip y puerto configurado al incio
+//Arrancamos el servidor WebSocket en la ip y puerto configurado al inicio
 }).listen(puertoServer,ipServer);
+
+
+function initClient(conexion){
+	if(conexion.tipo === "visualizador"){
+		conexion.alias = conexion.tipo+((visualizadores.length)+1);
+		visualizadores.push(conexion);
+	}else if( conexion.tipo === "controlador"){
+		conexion.alias = conexion.tipo+((controladores.length)+1);
+		controladores.push(conexion);
+	}else if( conexion.tipo === "plataforma"){
+		conexion.alias = conexion.tipo+((plataformas.length)+1);
+		plataformas.push(conexion);
+	}
+}
 
 function broadcast(str) {
 	server.connections.forEach(function (connection) {
 		if(connection!=null){
 			connection.sendText(str)
+		}
+	})
+}
+
+function getStats(){
+	var stats = '{"ev":"stats","n_clientes":'+ n_clientes +',"n_plataformas":' + plataformas.length +',"n_visualizadores":' + visualizadores.length +',"n_controladores":' + controladores.length +',"n_mensajes":' + n_mensajes + '}';
+	return stats;
+}
+
+function getClientesConectados() {
+	var res = {
+		"ev" : "list",
+		clients: []
+	};
+	var clients = [];
+	server.connections.forEach(function (connection) {
+		if(connection!=null){
+			var client = {};
+			client.alias = connection.alias;
+			client.tipo = connection.tipo;
+			client.cliente = connection.cliente;
+			client.ip = connection.socket.remoteAddress;
+			client.data = connection.data;
+			clients.push(client);
+		}
+	});
+	res.clients = clients;
+	return res;
+}
+
+function broadcastControladores(str) {
+	server.connections.forEach(function (connection) {
+		if(connection!=null){
+			if( connection.tipo === "controlador" || connection.tipo === "visualizador" )
+				connection.sendText(str)
+		}
+	})
+}
+
+function broadcastPlataformas(str) {
+	server.connections.forEach(function (connection) {
+		if(connection!=null){
+			if( connection.tipo === "plataforma" || connection.tipo === "visualizador" )
+				connection.sendText(str)
+		}
+	})
+}
+
+function broadcastVisualizadores(str) {
+	server.connections.forEach(function (connection) {
+		if(connection!=null){
+			if( connection.tipo === "visualizador" )
+				connection.sendText(str)
 		}
 	})
 }

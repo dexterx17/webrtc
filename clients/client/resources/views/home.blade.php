@@ -6,8 +6,14 @@
         #map-canvas{
             width: 100%;
             min-height: 400px;
-            height: 100%;
+            margin-top: 20px;            
             display: block;
+        }
+        #posiciones_controladores{
+            float: left;
+        }
+        #posiciones_plataformas{
+            float: right;
         }
     </style>
 @endsection
@@ -27,7 +33,7 @@
                         </div>
                         <span class="card-title">Plataformas
                         </span>
-                        <span class="stats-counter"><span class="counter" id="numero_plataformas">0</span><small>conectados</small></span>
+                        <span class="stats-counter"><span class="counter numero_plataformas" id="numero_plataformas">0</span><small>conectados</small></span>
                     </div>
                     <div id="sparkline-bar"></div>
                 </div>
@@ -41,7 +47,7 @@
                             </ul>
                         </div>
                         <span class="card-title">Controladores</span>
-                        <span class="stats-counter"><span class="counter" id="numero_controladores">0</span><small>conectados</small></span>
+                        <span class="stats-counter"><span class="counter numero_controladores" id="numero_controladores">0</span><small>conectados</small></span>
                     </div>
                     <div id="sparkline-line"></div>
                 </div>
@@ -49,8 +55,32 @@
         </div>
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l8">
-                <div class="card">
-                    <div  id="map-canvas" class="card-content"></div>
+                <div class="card" style="min-height: 500px;">
+                    <div class="card-content">
+                        <div class="card-title">
+                            <ul id="posiciones_controladores">
+                                <li>
+                                    <i class="material-icons">settings_remote</i>
+                                    Latitud: <em class="lat">0</em> || Longitud: <em class="lng">0</em> || Altura: <em class="alt">0</em>
+                                </li>
+                                <li>
+                                    <i class="material-icons">settings_remote</i>
+                                    Latitud: <em class="lat">0</em> || Longitud: <em class="lng">0</em> || Altura: <em class="alt">0</em></li>
+                            </ul>
+                            <ul id="posiciones_plataformas">
+                                <li>
+                                    <i class="material-icons">my_location</i>
+                                    Latitud: <em class="lat">0</em> || Longitud: <em class="lng">0</em> || Altura: <em class="alt">0</em>
+                                </li>
+                                <li>
+                                    <i class="material-icons">my_location</i>
+                                    Latitud: <em class="lat">0</em> || Longitud: <em class="lng">0</em> || Altura: <em class="alt">0</em></li>
+                            </ul>
+                        </div>
+                        <div  id="map-canvas">
+                            
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col s12 m12 l4">
@@ -99,103 +129,6 @@
 
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCzjeZ1lORVesmjaaFu0EbYeTw84t1_nek"></script>
 
-<script type="text/javascript">
-
-    var map;
-    var marker;
-    var markers = [];
-
-    var drone_image = '{{ asset("img/drone.png") }}';
-    var kunka_image = '{{ asset("img/kunka.png") }}';
-
-
-    $( document ).ready(function() {
-        function initialize() {
-            var mapOptions = {
-                center: new google.maps.LatLng(-0.9357917,-78.6124162,12),
-                zoom: 18
-            };
-            map = new google.maps.Map(document.getElementById('map-canvas'),  mapOptions); 
-        }
-        google.maps.event.addDomListener(window, 'load', initialize);
-    });
-
-    function WebSocketTest()
-    {
-        if ("WebSocket" in window)
-        {
-            Materialize.toast('WebSocket is supported by your Browser and online!', 4000);
-            // Let us open a web socket
-            var ws = new WebSocket("ws://10.211.159.163:9000/");
-            
-            ws.onopen = function()
-            {
-                $('#status_server').html('online').removeClass('red').addClass('green');
-                // Web Socket is connected, send data using send()
-                ws.send('{"cliente":"visualizador"}');
-                //ws.send(JSON.stringify('{"cliente":"visualizador"}'));
-                //ws.send('visualizador');
-                Materialize.toast('Visualizador inicializado', 4000);
-            };
-            
-            ws.onmessage = function (evt) 
-            { 
-                var data = evt.data;
-
-                console.log('- - - - -- - - - - - - -');
-                console.log(data);
-                console.log('********************');
-
-                var json = JSON.parse(data);
-
-                console.log(json);
-                console.log('- - - - -- - - - - - - -');
-
-                if( typeof json['n_clientes'] !== "undefined" ){
-                    $('#numero_clientes').html(json['n_clientes']);
-                    $('#total_mensajes').html(json['n_mensajes']);
-                }else if(typeof json['connected'] !== "undefined") {
-                    $('#list-clientes-conectados').append(section_cliente(json));
-                }else if(typeof json['disconnected'] !== "undefined") {
-                    $item = $('#list-clientes-conectados').children('[id^="cliente'+json.id+'"]').fadeOut('slow');
-                }else if(typeof json['client'] !== "undefined") {
-                    if( typeof marker !== "undefined" ){
-                        marker.setPosition({ lat : json['lat'], lng : json['lng'] });
-                    }else{
-                        marker = new google.maps.Marker({
-                            position: { lat : json['lat'], lng : json['lng'] },
-                            map: map,
-                            title: json['client'],
-                            icon: drone_image
-                          });
-                    }
-
-                    $('#total_mensajes').html(parseInt($('#total_mensajes').html())+1);
-                }else{
-                    console.log(json);
-                }
-            };
-            
-            ws.onclose = function()
-            { 
-                $('#status_server').html('offline').removeClass('green').addClass('red');
-              // websocket is closed.
-              Materialize.toast('Visualizador desconetado del WebSocket!', 4000);
-            };
-                
-           window.onbeforeunload = function(event) {
-              ws.close();
-           };
-        }
-        
-        else
-        {
-           // The browser doesn't support WebSocket
-           Materialize.toast('WebSocket NOT supported by your Browser!', 4000);
-           $('#status_server').html('offline').removeClass('green').addClass('red');
-        }
-    }
-
-    setTimeout(function(){ WebSocketTest() }, 4000);
-</script>
+<script type="text/javascript" src="{{ asset('js/utils.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/websocket_client.js') }}"></script>
 @endsection

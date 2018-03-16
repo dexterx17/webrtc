@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Learning</title>
+	<script  type="text/javascript" charset="utf-8">
+		var adder1 = function(num1, num2){
+			return num1 + num2;
+		};
+
+		var adder2 = new Function("num1", "num2", "return num1 + num2");
+
+		console.log(adder1(2,3));
+		console.log(adder2(2,3));
+
+		function make(adjetivo){
+			return new Function('noun', "return noun[0].toUpperCase() + noun.slice(1) + ' is " + adjetivo + "!'");
+		}
+		var isFun = make('XXX');
+
+		console.log(isFun('jaime'));
+
+
+		function letras(letra){
+			return new Function('num',"var res=''; for(var i=0; i<num; i++){ res+='" + letra + "'; } return res; " );
+		}
+
+		console.log(letras('X')(3.5));
+
+	</script>
+</head>
+<body>
+
+</body>
+</html>
