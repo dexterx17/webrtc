@@ -40,8 +40,6 @@
 
             <ul class="nav navbar-nav">
               <li class="active"><a href="#/">Home</a></li>
-              <li><a ng-href="#/">About</a></li>
-              <li><a ng-href="#/">Contact</a></li>
             </ul>
           </div>
         </div>
@@ -49,7 +47,9 @@
     </div>
 
     <div class="container">
-    <div ng-include="'views/main.html'" ng-controller="MainCtrl"></div>
+      <div ng-include="'views/order.html'" ng-controller="OrderCtrl as order"></div>
+      <div ui-view></div>
+    
     </div>
 
     <div class="footer">
@@ -75,12 +75,17 @@
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
-        <script src="scripts/controllers/main.js"></script>
+        <script src="scripts/controllers/menu.js"></script>
+        <script src="scripts/services/order-manager.js"></script>
+        <script src="scripts/controllers/order.js"></script>
+        <script src="scripts/controllers/item.js"></script>
+        <script src="scripts/services/food-finder.js"></script>
         <!-- endbuild -->
 </body>
 </html>

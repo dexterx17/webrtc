@@ -1,0 +1,17 @@
+body{
+	background-color: #D6D1D7;
+	text-align: center;
+}
+
+a{
+	border: 2px solid black;
+	background-color: #CACACA;
+	padding: 5px 10px;
+	border-radius: 10px;
+	margin: 5px 10px;
+}
+
+ul li{
+	border: 2px dotted black;
+	padding:5px 10px;
+}

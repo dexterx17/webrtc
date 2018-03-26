@@ -1,0 +1,14 @@
+{
+	"id":"strawberry-pudding",
+	"name":"Strawberry Pudding",
+	"image":"strawberry-pudding.png",
+	"calories": 280,
+	"rating":5,
+	"description":"A simple, sweet and delicious salad",
+	"reviews":[
+		"review 1",
+		"review 2",
+		"review 3",
+		"review 4"
+	]
+}

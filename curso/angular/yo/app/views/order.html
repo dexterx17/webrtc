@@ -1,0 +1,19 @@
+<div class="row">
+	<div class="col-md-2 col-sm-2 col-xs-2" ng-repeat="(day, menuCategory) in order.list" ng-click="order.setActiveDay(day)">
+		{{ day }}
+		<dl>
+			<dt>Breakfast</dt>
+			<dd>
+				{{ menuCategory.breakfast }}
+			</dd>
+			<dt>Lunch</dt>
+			<dd>
+				{{ menuCategory.lunch }}
+			</dd>
+			<dt>Dinner</dt>
+			<dd>
+				{{ menuCategory.dinner }}
+			</dd>
+		</dl>
+	</div>
+</div>

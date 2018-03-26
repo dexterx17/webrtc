@@ -1,0 +1,40 @@
+[{
+	"id":"chicken-pomegranate",
+	"name":"Chicken Pomegranate",
+	"img":"chicken-pomegranate.png",
+	"calories": 430,
+	"rating":4.1,
+	"description":"A simple, sweet and delicious salad",
+	"reviews":[
+		"review 1",
+		"review 2",
+		"review 3",
+		"review 4"
+	]
+},{
+	"id":"ham-goat-cheese-croissant",
+	"name":"Ham and Goat Cheese Croissant",
+	"img":"croissant.png",
+	"calories": 670,
+	"rating":5,
+	"description":"A simple, sweet and delicious salad",
+	"reviews":[
+		"review 21",
+		"review 22",
+		"review 23",
+		"review 24"
+	]
+},{
+	"id":"strawberry-pudding",
+	"name":"Strawberry Pudding",
+	"img":"straw.png",
+	"calories": 280,
+	"rating":5,
+	"description":"A simple, sweet and delicious salad",
+	"reviews":[
+		"review 31",
+		"review 32",
+		"review 33",
+		"review 34"
+	]
+}]

@@ -1,0 +1,14 @@
+{
+	"id":"ham-goat-cheese-croissant",
+	"name":"Ham and Goat Cheese Croissant",
+	"image":"ham-goat-cheese-croissant.png",
+	"calories": 670,
+	"rating":5,
+	"description":"A simple, sweet and delicious salad",
+	"reviews":[
+		"review 1",
+		"review 2",
+		"review 3",
+		"review 4"
+	]
+}

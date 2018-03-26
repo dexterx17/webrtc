@@ -1,0 +1,18 @@
+Signaling server
+
+
+
+shift-moderator-control-on-disconnect
+extra-data-updated
+get-remote-user-extra-data
+become-a-public-moderator
+set-custom-socket-event-listener
+dont-make-me-moderator
+get-public-moderators
+changed-uuid
+set-password
+disconnect-with
+close-entire-session
+check-presence
+custom-event
+disconnect

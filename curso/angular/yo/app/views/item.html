@@ -1,0 +1,16 @@
+<h3>{{ item.data.name}}</h3>
+
+<dl>
+	<dt>Rating</dt>
+	<dd>{{ item.data.rating }}</dd>
+	<dt>Description</dt>
+	<dd>{{ item.data.description }}</dd>
+</dl>
+
+<p>
+	<a ui-sref="item.nutricion" title="Nutricion">Nutricion</a>
+	<a ui-sref="item.reviews" title="Reviews">Reviews</a>
+</p>
+<div ui-view>
+	
+</div>

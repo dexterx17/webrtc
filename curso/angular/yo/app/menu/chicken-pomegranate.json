@@ -1,0 +1,14 @@
+{
+	"id":"chicken-pomegranate",
+	"name":"Chicken Pomegranate",
+	"image":"chicken-pomegranate.png",
+	"calories": 430,
+	"rating":4.1,
+	"description":"A simple, sweet and delicious salad",
+	"reviews":[
+		"review 1",
+		"review 2",
+		"review 3",
+		"review 4"
+	]
+}
