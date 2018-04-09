@@ -24,6 +24,7 @@ MSG_CONEXION  = "conn";
 MSG_LISTADO_CLIENTES = "list";
 MSG_ESTADO_SERVIDOR = "stats";
 MSG_DESCONEXION = "disc";
+MSG_RUTA = "ruta";
 
 //Instancias para clientis del websocket
 var plataforma;
@@ -53,26 +54,6 @@ var server = ws.createServer(function(conexion){
 	console.log('----');
 	console.log(conexion.asyncId);
 	console.log('-------------------------------------');*/
-
-	conexion.on("connected", function (e) {
-	    console.log("un connected ahi:");
-	});
-	conexion.on("connect", function (e) {
-	    console.log("un connect ahi:");
-	});
-	conexion.on("open", function (e) {
-	    console.log("un open ahi:");
-	});
-	conexion.on("connection", function () {
-	    console.log("un connection ahi sin parametro:");
-	});
-
-	conexion.on('connection', function(e) {
-		console.log("un connection ahi:");
-	});	
-	conexion.on('connection', function(e, evt) {
-		console.log("un connection ahi ws:");
-	});
 
 	conexion.on("text", function (msg) {
 		n_mensajes++;
@@ -112,11 +93,13 @@ var server = ws.createServer(function(conexion){
 				}
 	    		break;
 	    	case MSG_INSTRUCCION:
-
+	    		broadcastPlataformas(JSON.stringify(str));
 	    	break;
 	    	case MSG_ESTADO:
-	    		
-				broadcast(JSON.stringify(str));
+				broadcastControladores(JSON.stringify(str));
+	    	break;
+	    	case MSG_RUTA:
+				broadcastVisualizadores(JSON.stringify(str));
 	    	break;
 	    	default:
 	    	break;
@@ -159,6 +142,11 @@ var server = ws.createServer(function(conexion){
 }).listen(puertoServer,ipServer);
 
 
+/**
+* Agrega el cliente a la pila correspondiente,de acuerdo a su tipo
+* adiocionalmente genera un alias unico para cada cliente
+*
+**/
 function initClient(conexion){
 	if(conexion.tipo === "visualizador"){
 		conexion.alias = conexion.tipo+((visualizadores.length)+1);

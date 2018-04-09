@@ -2,6 +2,8 @@ var base_url = window.location.origin;
 var app_url = base_url + '/web/clients/client/public/'
 
 var map;
+var trayectoria;
+var route;
 var marker;
 var markers = [];
 
@@ -14,9 +16,10 @@ MSG_CONEXION  = "conn";
 MSG_LISTADO_CLIENTES = "list";
 MSG_ESTADO_SERVIDOR = "stats";
 MSG_DESCONEXION = "disc";
+MSG_RUTA = "ruta";
 
 //Imagenes para mostrar los clientes en el mapa
-var drone_image = app_url + 'img/drone.png';
+var drone_image = app_url + 'img/dron.png';
 var kunka_image = app_url + 'img/kunka.png';
 var android_image = app_url + 'img/android.png';
 var kunka_image = app_url + 'img/kunka.png';
@@ -38,16 +41,6 @@ $( document ).ready(function() {
         };
         map = new google.maps.Map(document.getElementById('map-canvas'),  mapOptions); 
 
-        // Construct the polygon.
-        var bermudaTriangle = new google.maps.Polygon({
-            paths: triangleCoords,
-            strokeColor: '#FF0000',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            //fillColor: '#FF0000',
-            fillOpacity: 0
-        });
-        bermudaTriangle.setMap(map);
     }
     google.maps.event.addDomListener(window, 'load', initialize);
 });
@@ -55,13 +48,59 @@ $( document ).ready(function() {
 function procesarMensaje(msg){
 
 }
+
+function graficarRuta(puntos){
+    var coords = [];
+    console.log('creando ruta');
+    for (var i = 0; i < puntos.length; i++) {
+        //var p = { lat: puntos[i].lat, lng: puntos[i].lng };
+        var pos = new google.maps.LatLng({ lat: puntos[i].lat, lng: puntos[i].lng });
+        coords.push(pos);
+    }
+
+    if(typeof route === "undefined"){
+        //var route = new google.maps.Polygon({
+        route = new google.maps.Polyline({
+            path: coords,
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            //fillColor: '#FF0000',
+            fillOpacity: 0,
+            map: map
+        });
+    }else{
+        route.setMap(null);
+        route = new google.maps.Polyline({
+            path: coords,
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            //fillColor: '#FF0000',
+            fillOpacity: 0,
+            map: map
+        });
+    }
+}
+
+function graficarTrayectoria(){
+    // Define a symbol using SVG path notation, with an opacity of 1.
+    var lineSymbol = {
+      path: 'M 0,-1 0,1',
+      strokeOpacity: 1,
+      scale: 4
+    };
+
+
+}
+
 function WebSocketTest()
 {
     if ("WebSocket" in window)
     {
         Materialize.toast('WebSocket is supported by your Browser and online!', 4000);
         // Let us open a web socket
-        var ws = new WebSocket("ws://10.211.159.20:9000/");
+        var ws = new WebSocket("ws://10.211.159.30:9000/");
         
         ws.onopen = function()
         {
@@ -104,6 +143,10 @@ function WebSocketTest()
                     console.log('list clients!!!');
                     var items = json['data']
                 break;
+                case MSG_RUTA:
+                    console.log('init RUTA');
+                    graficarRuta(json['data']);
+                break;
                 case MSG_DESCONEXION:
                     console.log('desconexion');
                     $item = $('#list-clientes-conectados').children('[id^="cliente'+json.id+'"]').fadeOut('slow');
@@ -112,15 +155,31 @@ function WebSocketTest()
                     var lat = parseFloat(json['lat']);
                     var lng = parseFloat(json['lng']);
 
+                    var position = { lat : lat, lng : lng };
+                    var pos = new google.maps.LatLng({ lat : lat, lng : lng });
+
+                    console.log('position');
+                    console.log(position);
                     if( typeof marker !== "undefined" ){
-                        marker.setPosition({ lat : lat, lng : lng });
+                        marker.setPosition(position);
+                        var path = trayectoria.getPath();
+                        // Because path is an MVCArray, we can simply append a new coordinate
+                        // and it will automatically appear.
+                        path.push(pos);
                     }else{
                         marker = new google.maps.Marker({
-                            position: { lat : lat, lng : lng },
+                            position: position,
                             map: map,
                             title: json['client'],
+                            opacity: 0.3,
                             icon: drone_image
                           });
+                        trayectoria = new google.maps.Polyline({
+                            strokeColor: '#50FE99',
+                            strokeOpacity: 1.0,
+                            strokeWeight: 3
+                        });
+                        trayectoria.setMap(map);
                     }
                 
                 break;
