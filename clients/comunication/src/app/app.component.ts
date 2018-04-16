@@ -6,7 +6,7 @@ import { Constantes } from './constantes';
 @Component({
   selector: 'arsi-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  styleUrls: ['./app.component.scss'],
   providers: [WebsocketService, ChatService]
 })
 

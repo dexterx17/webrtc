@@ -41,6 +41,15 @@ $( document ).ready(function() {
         };
         map = new google.maps.Map(document.getElementById('map-canvas'),  mapOptions); 
 
+         route = new google.maps.Polyline({
+            path: triangleCoords,
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.7,
+            strokeWeight: 2,
+            //fillColor: '#FF0000',
+            fillOpacity: 0,
+            map: map
+        });
     }
     google.maps.event.addDomListener(window, 'load', initialize);
 });
@@ -100,7 +109,7 @@ function WebSocketTest()
     {
         Materialize.toast('WebSocket is supported by your Browser and online!', 4000);
         // Let us open a web socket
-        var ws = new WebSocket("ws://10.211.159.30:9000/");
+        var ws = new WebSocket("ws://10.211.159.51:9000/");
         
         ws.onopen = function()
         {
@@ -171,7 +180,7 @@ function WebSocketTest()
                             position: position,
                             map: map,
                             title: json['client'],
-                            opacity: 0.3,
+                            opacity: 0.8,
                             icon: drone_image
                           });
                         trayectoria = new google.maps.Polyline({
