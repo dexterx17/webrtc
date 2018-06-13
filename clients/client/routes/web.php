@@ -18,3 +18,6 @@ Route::get('/control-drone', 'Front@control_drone')->name('control-drone');
 Route::get('/control-kunka', function () {
     return view('kunka.control');
 })->name('control-kunka');
+
+Route::get('/webrtc', 'Front@webrtc')->name('webrtc');
+Route::get('/webrtclient', 'Front@webrtc_client')->name('webrtc_client');

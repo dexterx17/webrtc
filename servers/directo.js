@@ -35,6 +35,8 @@ var plataformas = [];
 
 var n_clientes = 0;
 var n_mensajes = 0;
+var n_mensajes_p = 0;
+var n_mensajes_c = 0;
 
 //Creamos y configuramos el WebSocket
 var server = ws.createServer(function(conexion) {
@@ -113,6 +115,8 @@ var server = ws.createServer(function(conexion) {
                     //console.log(str);
                     //console.log('*****');
                     //verifico si ya se inicializo
+                    n_mensajes_p++;
+                    str.count = n_mensajes_p;
                     if (conexion.masters) {
                         //verifico si la plataforma esta emparejada con algun controlador
                         if (conexion.masters.length > 0) {
@@ -367,7 +371,7 @@ function broadcastPlataformas(str) {
 }
 
 function broadcastVisualizadores(str) {
-    //console.log('sending to viewers... ' + new Date().toLocaleTimeString());
+    console.log('sending to viewers... ' + new Date().toLocaleTimeString());
     server.connections.forEach(function(connection) {
         if (connection != null) {
             if (connection.tipo === "viewer")

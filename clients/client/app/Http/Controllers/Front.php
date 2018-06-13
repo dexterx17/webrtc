@@ -26,7 +26,14 @@ class Front extends Controller
     public function home(){
     	return view('home',$this->datos);
     }
-	
+    
+    public function webrtc(){
+        return view('webrtc.server',$this->datos);
+    }
+
+    public function webrtc_client(){
+        return view('webrtc.client',$this->datos);
+    }
     public function control_drone(){
         $this->datos['active_page']='control_drone';
         return view('drone.control',$this->datos);
