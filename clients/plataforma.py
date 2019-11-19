@@ -43,7 +43,7 @@ def on_open(ws):
 
 if __name__ == "__main__":
     #websocket.enableTrace(True)
-    ws = websocket.WebSocketApp("ws://10.211.159.112:9300",
+    ws = websocket.WebSocketApp("ws://10.211.159.17:9001",
                                 on_message = on_message,
                                 on_error = on_error,
                                 on_close = on_close)

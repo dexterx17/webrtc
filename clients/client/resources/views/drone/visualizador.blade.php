@@ -134,7 +134,7 @@
 
 @section('js')
 
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCzjeZ1lORVesmjaaFu0EbYeTw84t1_nek"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=key=AIzaSyDO40PjEqO8TpZyx1cfi8uS06MNRpAFTik"></script>
 
 <script type="text/javascript">
 
@@ -144,7 +144,7 @@
         {
             Materialize.toast('WebSocket is supported by your Browser!', 4000);
             // Let us open a web socket
-            var ws = new WebSocket("ws://10.211.159.62:9000/");
+            var ws = new WebSocket("ws://192.168.1.35:9001/");
             
             ws.onopen = function()
             {
@@ -159,9 +159,9 @@
             { 
                 var data = evt.data;
 
-                //console.log('- - - - -- - - - - - - -');
-                //console.log(data);
-                //console.log('********************');
+                console.log('- - - - -- - - - - - - -');
+                console.log(data);
+                console.log('********************');
 
                 var json = JSON.parse(data);
 

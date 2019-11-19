@@ -13,7 +13,8 @@ var ws = require("nodejs-websocket");
 
 //Info de servidor
 var ipServer = "0.0.0.0";
-var puertoServer = 9000;
+//var ipServer = "10.211.159.40";
+var puertoServer = 9001;
 
 //Constantes que identifican el tipo de mensaje recibido a traves del websocket
 MSG_IDENTIFICACION = "id";
@@ -374,8 +375,11 @@ function broadcastVisualizadores(str) {
     console.log('sending to viewers... ' + new Date().toLocaleTimeString());
     server.connections.forEach(function(connection) {
         if (connection != null) {
-            if (connection.tipo === "viewer")
+            if (connection.tipo === "viewer") {
+                console.log('to viewer...');
+                console.log(str);
                 connection.sendText(str)
+            }
         }
     })
 }

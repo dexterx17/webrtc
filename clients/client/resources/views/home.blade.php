@@ -127,7 +127,7 @@
 
 @section('js')
 
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCzjeZ1lORVesmjaaFu0EbYeTw84t1_nek"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDO40PjEqO8TpZyx1cfi8uS06MNRpAFTik"></script>
 
 <script type="text/javascript" src="{{ asset('js/utils.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/websocket_client.js') }}"></script>

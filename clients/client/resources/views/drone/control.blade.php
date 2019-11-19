@@ -146,7 +146,7 @@
         {
             Materialize.toast('WebSocket is supported by your Browser!', 4000);
             // Let us open a web socket
-            ws = new WebSocket("ws://10.211.159.163:9000/");
+            ws = new WebSocket("ws://10.211.159.17:9001/");
             
             ws.onopen = function()
             {
@@ -154,6 +154,7 @@
                 $('#btn-send-data').removeAttr('disabled');
                 // Web Socket is connected, send data using send()
                 //ws.send('{ "cliente" : "visualizador" }');
+                alert('identificandome');
                 ws.send('{"cliente":"controlador"}');
                 Materialize.toast('Online & Visualizador inicializado', 4000);
             };
