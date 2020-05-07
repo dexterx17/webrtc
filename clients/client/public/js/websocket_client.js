@@ -107,7 +107,7 @@ function WebSocketTest() {
     if ("WebSocket" in window) {
         Materialize.toast('WebSocket is supported by your Browser and online!', 4000);
         // Let us open a web socket
-        var ws = new WebSocket("ws://192.168.1.35:9001/");
+        var ws = new WebSocket("ws://201.159.223.139:9001/");
 
         ws.onopen = function() {
             $('#status_server').html('online').removeClass('red').addClass('green');
