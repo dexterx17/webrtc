@@ -1,4 +1,4 @@
-@extends('template.lite')
+@extends('template.base')
 
 
 @section('css')
