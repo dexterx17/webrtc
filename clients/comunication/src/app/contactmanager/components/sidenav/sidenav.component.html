@@ -7,7 +7,7 @@
 	  <span>Clients</span>
 	</mat-toolbar>
 	<mat-nav-list>
-	<mat-list-item *ngFor="let user of users | async">
+		<mat-list-item *ngFor="let user of users | async">
 	    <a matLine [routerLink]="['/contactmanager', user.id ]">
 	    	<mat-icon svgIcon="drone"></mat-icon>
 	    	{{ user.name }}

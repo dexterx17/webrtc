@@ -1,1 +1,6 @@
 /* Write your custom CSS here */
+
+#url_websocket{
+ 	float: left !important;
+ 	width: 100%;
+ }

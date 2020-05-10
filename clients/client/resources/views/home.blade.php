@@ -5,7 +5,7 @@
     <style type="text/css" media="screen">
         #map-canvas{
             width: 100%;
-            min-height: 400px;
+            min-height: 350px;
             margin-top: 20px;            
             display: block;
         }
@@ -23,37 +23,6 @@
 <main class="mn-inner ">
     <div class="">
         <div class="row no-m-t no-m-b">
-            <div class="col s12 m12 l6">
-                <div class="card stats-card">
-                    <div class="card-content">
-                        <div class="card-options">
-                            <ul>
-                                <li><a href="javascript:void(0)"><i class="material-icons">more_vert</i></a></li>
-                            </ul>
-                        </div>
-                        <span class="card-title">Plataformas
-                        </span>
-                        <span class="stats-counter"><span class="counter numero_plataformas" id="numero_plataformas">0</span><small>conectados</small></span>
-                    </div>
-                    <div id="sparkline-bar"></div>
-                </div>
-            </div>
-            <div class="col s12 m12 l6">
-                <div class="card stats-card">
-                    <div class="card-content">
-                        <div class="card-options">
-                            <ul>
-                                <li><a href="javascript:void(0)"><i class="material-icons">more_vert</i></a></li>
-                            </ul>
-                        </div>
-                        <span class="card-title">Controladores</span>
-                        <span class="stats-counter"><span class="counter numero_controladores" id="numero_controladores">0</span><small>conectados</small></span>
-                    </div>
-                    <div id="sparkline-line"></div>
-                </div>
-            </div>
-        </div>
-        <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l8">
                 <div class="card" style="min-height: 500px;">
                     <div class="card-content">
@@ -61,20 +30,8 @@
                             <ul id="posiciones_controladores">
                                 <li>
                                     <i class="material-icons">settings_remote</i>
-                                    Latitud: <em class="lat">0</em> || Longitud: <em class="lng">0</em> || Altura: <em class="alt">0</em>
+                                    Latitud: <em id="lat">0</em> || Longitud: <em id="lng">0</em> || Altura: <em id="alt">0</em>
                                 </li>
-                                <li>
-                                    <i class="material-icons">settings_remote</i>
-                                    Latitud: <em class="lat">0</em> || Longitud: <em class="lng">0</em> || Altura: <em class="alt">0</em></li>
-                            </ul>
-                            <ul id="posiciones_plataformas">
-                                <li>
-                                    <i class="material-icons">my_location</i>
-                                    Latitud: <em class="lat">0</em> || Longitud: <em class="lng">0</em> || Altura: <em class="alt">0</em>
-                                </li>
-                                <li>
-                                    <i class="material-icons">my_location</i>
-                                    Latitud: <em class="lat">0</em> || Longitud: <em class="lng">0</em> || Altura: <em class="alt">0</em></li>
                             </ul>
                         </div>
                         <div  id="map-canvas">
@@ -91,15 +48,22 @@
                             <li class="red-text"><span class="badge red lighten-3" id="status_server">offline</span></li>
                         </ul>
                     </div>
-                        <span class="card-title">Servidor</span>
+                        <div class="card-title">
+                            Servidor<br>
+                            <small id="url_websocket"></small>
+                        </div>
                         <div class="server-load row">
-                            <div class="server-stat col s6">
-                                <p id="numero_clientes">0</p>
-                                <span>Clientes</span>
+                            <div class="server-stat col s4">
+                                <p id="numero_controllers">0</p>
+                                <span>Controllers</span>
                             </div>
-                            <div class="server-stat col s6">
-                                <p id="total_mensajes">0</p>
-                                <span>Mensajes</span>
+                            <div class="server-stat col s4">
+                                <p id="numero_plataformas">0</p>
+                                <span>Platforms</span>
+                            </div>
+                            <div class="server-stat col s4">
+                                <p id="numero_viewers">0</p>
+                                <span>Viewers</span>
                             </div>
                         </div>
                         <div id="flotchart2"></div>
@@ -130,5 +94,7 @@
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCzjeZ1lORVesmjaaFu0EbYeTw84t1_nek"></script>
 
 <script type="text/javascript" src="{{ asset('js/utils.js') }}"></script>
+
+<!--<script type="text/javascript" src="{{ asset('js/webrtc_client.js') }}"></script>-->
 <script type="text/javascript" src="{{ asset('js/websocket_client.js') }}"></script>
 @endsection

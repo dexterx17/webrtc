@@ -1,6 +1,8 @@
 var base_url = window.location.origin;
 var app_url = base_url + '/web/clients/client/public/'
 
+var url_websocket = 'ws://10.211.159.40:9000/';
+
 var map;
 var trayectoria;
 var route;
@@ -41,7 +43,7 @@ $( document ).ready(function() {
         };
         map = new google.maps.Map(document.getElementById('map-canvas'),  mapOptions); 
 
-         route = new google.maps.Polyline({
+        /* route = new google.maps.Polyline({
             path: triangleCoords,
             strokeColor: '#FF0000',
             strokeOpacity: 0.7,
@@ -49,7 +51,7 @@ $( document ).ready(function() {
             //fillColor: '#FF0000',
             fillOpacity: 0,
             map: map
-        });
+        });*/
     }
     google.maps.event.addDomListener(window, 'load', initialize);
 });
@@ -103,22 +105,31 @@ function graficarTrayectoria(){
 
 }
 
+function incViewers(){
+    var actual = parseInt($('#numero_viewers').html());
+    $('#numero_viewers').html(actual+1);
+}
+
 function WebSocketTest()
 {
     if ("WebSocket" in window)
     {
         Materialize.toast('WebSocket is supported by your Browser and online!', 4000);
         // Let us open a web socket
-        var ws = new WebSocket("ws://10.211.159.51:9000/");
+        var ws = new WebSocket(url_websocket);
         
+        $('#url_websocket').html(url_websocket);
+
         ws.onopen = function()
         {
             $('#status_server').html('online').removeClass('red').addClass('green');
             // Web Socket is connected, send data using send()
-            ws.send('{"ev":"id","tipo":"visualizador","cliente":"general"}');
-            //ws.send(JSON.stringify('{"cliente":"visualizador"}'));
-            //ws.send('visualizador');
+            
+            ws.send('{"ev":"id","tipo":"viewer","cliente":"general"}', {binary: true, mask: true});
+            //ws.send(JSON.stringify('{"cliente":"viewer"}'));
+            //ws.send('viewer');
             Materialize.toast('Visualizador inicializado', 4000);
+            incViewers();
 
         };
         
@@ -146,7 +157,7 @@ function WebSocketTest()
                     $('#numero_clientes').html(json['n_clientes']);
                     $('#total_mensajes').html(json['n_mensajes']);
                     $('.numero_controladores').html(json['n_controladores']);
-                    $('.numero_plataformas').html(json['n_plataformas']);
+                    $('.numero_plataformas').html(json['n_platforms']);
                 break;
                 case MSG_LISTADO_CLIENTES:
                     console.log('list clients!!!');
@@ -166,6 +177,9 @@ function WebSocketTest()
 
                     var position = { lat : lat, lng : lng };
                     var pos = new google.maps.LatLng({ lat : lat, lng : lng });
+
+                    $('#lat').html(lat);
+                    $('#lng').html(lng);
 
                     console.log('position');
                     console.log(position);
