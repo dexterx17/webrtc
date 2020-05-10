@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import websocket
-import _thread
+import thread
 import time
 import random
 import json
@@ -38,12 +38,12 @@ def on_open(ws):
         time.sleep(1)
         ws.close()
         print ("thread terminating...")
-    _thread.start_new_thread(run, ())
+    thread.start_new_thread(run, ())
 
 
 if __name__ == "__main__":
     #websocket.enableTrace(True)
-    ws = websocket.WebSocketApp("ws://10.211.159.112:9300",
+    ws = websocket.WebSocketApp("ws://201.159.223.139:9001",
                                 on_message = on_message,
                                 on_error = on_error,
                                 on_close = on_close)
